@@ -1,0 +1,48 @@
+.containerItemCount {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.contador{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 80%;
+    border: solid 2px black;
+    border-radius: 20px;
+    height: 30px;
+}
+
+.pos, .neg {
+    cursor: pointer;
+    border: none;
+    background-color: inherit;
+    font-size: 1.5em;
+    transition: all 0.3s linear;
+}
+
+.pos:hover,.neg:hover{
+    color: beige;
+}
+
+.card{
+    width: 80%;
+    border: solid 2px black;
+    border-radius: 20px;
+    height: 35px;
+    cursor: pointer;
+    margin: 10px 0 0 0;
+    font-size: 1.1em;
+    font-weight: 600;
+    transition: all 0.3s linear;
+    background-color: rgb(153, 169, 173);
+}
+
+.card:hover{
+    color: white;
+    background-color: blueviolet;
+}
+
