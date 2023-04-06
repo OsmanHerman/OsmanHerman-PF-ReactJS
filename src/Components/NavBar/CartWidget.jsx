@@ -1,15 +1,27 @@
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { Button } from "@mui/material";
-import { fontSize } from '@mui/system';
+import { BsFillCartCheckFill } from "react-icons/bs";
+import "./CartWidget.css";
+import { useContext } from "react"
 import { Link } from "react-router-dom";
+import { CartContext } from "../../context/CartContext";
 
 const CartWidget = () => {
+  const { getTotalQuantity } = useContext( CartContext )
+  const total = getTotalQuantity()
+
   return (
-    <div>
-      <Link style={{textDecoration: "none", color: "black"}} to="/Cart">
-        <Button style={{fontSize: "1.1em"}} variant="Text" startIcon={<ShoppingCartIcon style={{fontSize:"25px"}}/>}>0</Button>
-      </Link>
-    </div>
+    <Link to="/cart">
+      <div className="container-cart">
+        <BsFillCartCheckFill
+          style={{
+            fontSize: "2rem",
+            color: "#e1d4c7",
+          }}
+        />
+        <div className="bubble-counter">
+          <span>{total}</span>
+        </div>
+      </div>
+    </Link>
   );
 };
 

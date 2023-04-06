@@ -1,34 +1,56 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from "react";
+
 import { useParams } from "react-router-dom";
-import { products } from '../../productsMock';
-import ItemCount from '../ItemCount/ItemCount';
-import styles from './ItemDetailContainer.module.css'
+import Swal from "sweetalert2";
+import { CartContext } from "../../context/CartContext";
 
-const ItemDetailContainer =( ) => {
-    
-    const {id} = useParams();
-    const productSelected = products.find ( (element) => element.id === id );
+import { getDoc, collection, doc } from "firebase/firestore";
+import { db } from "../../firebaseConfig";
+import ItemDetail from "../ItemDetail/ItemDetail";
 
-    const onAdd = (quantity)=>{
-        if (quantity === 1) console.log(`Se agregó al carrito: ${quantity} elemento`)
-        else console.log (`Se agregaron al carrito: ${quantity} elementos`);
-    } 
+const ItemDetailContainer = () => {
+  const { id } = useParams();
 
-    return (
-        <div className={styles.containerDetail}>
-            <div className={styles.containerDetailOne}>
-                <img className={styles.img} src={productSelected.img} alt="" />
-            </div>
+  const { agregarAlCarrito, getQuantityById } = useContext(CartContext);
 
-            <div className={styles.containerDetailTwo}>
-                <h1 className={styles.title}>{productSelected.title}</h1>
-                <h3 className={styles.description}>{productSelected.description}</h3>
-                <h2 className={styles.price}><span>$</span>{productSelected.price.toFixed(2)}</h2>
-                <h5 className={styles.stock}>Hay disponible {productSelected.stock} unidades.</h5>
-                <ItemCount className={styles.itemCount} stock={productSelected.stock} onAdd={onAdd}/>
-            </div>
-        </div>
-    )
-}
+  const [productSelected, setProductSelected] = useState({});
 
-export default ItemDetailContainer
+  useEffect(() => {
+    const itemCollection = collection(db, "products");
+    const ref = doc(itemCollection, id);
+    getDoc(ref).then((res) => {
+      setProductSelected({
+        ...res.data(),
+        id: res.id,
+      });
+    });
+  }, [id]);
+
+  const onAdd = (cantidad) => {
+    let producto = {
+      ...productSelected,
+      quantity: cantidad,
+    };
+
+    agregarAlCarrito(producto);
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "Producto agregado exitosamente",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  };
+
+  let quantity = getQuantityById(Number(id));
+
+  return (
+    <ItemDetail
+      productSelected={productSelected}
+      onAdd={onAdd}
+      quantity={quantity}
+    />
+  );
+};
+
+export default ItemDetailContainer;
